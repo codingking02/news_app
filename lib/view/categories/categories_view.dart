@@ -4,7 +4,8 @@ import 'package:news_app/model/category.dart';
 import 'package:news_app/widgets/category/category_item.dart';
 
 class CategoriesView extends StatelessWidget {
-  const CategoriesView({super.key});
+  CategoriesView({required this.onCategorySelected, super.key});
+  void Function(MyCategory) onCategorySelected;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +28,13 @@ class CategoriesView extends StatelessWidget {
                   padding: index == MyCategory.myCategories.length - 1
                       ? EdgeInsets.only(bottom: 16.h)
                       : EdgeInsets.zero,
-                  child: CategoryItem(
-                    myCategory: MyCategory.myCategories[index],
+                  child: InkWell(
+                    onTap: () {
+                      onCategorySelected(MyCategory.myCategories[index]);
+                    },
+                    child: CategoryItem(
+                      myCategory: MyCategory.myCategories[index],
+                    ),
                   ),
                 );
               },

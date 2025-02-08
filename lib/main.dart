@@ -4,6 +4,7 @@ import 'package:news_app/theme/apptheme.dart';
 import 'package:news_app/view/home/home_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const News());
 }
 
