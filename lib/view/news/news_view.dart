@@ -17,43 +17,47 @@ class NewsView extends StatefulWidget {
 }
 
 class _NewsViewState extends State<NewsView> {
-  List<Source> sources = [];
-  List<MyNews> news = [];
   int currentIndex = 0;
-
+  late Future<List<Source>> futureSources;
   @override
   void initState() {
     super.initState();
-    getSourcesandNews();
-  }
-
-  Future<void> getSourcesandNews() async {
-    NewsApi newsApi = NewsApi();
-    sources = await newsApi.getCategorySources(widget.category);
-    news = await newsApi.getNewsFromSource(
-      sources[currentIndex].id,
-    );
-    setState(() {});
+    futureSources = NewsApi().getCategorySources(widget.category);
   }
 
   @override
   Widget build(BuildContext context) {
-    //WITHOUT FUTUREBUILDER
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          sources.isEmpty
-              ? Padding(
+    //SECOND WAY WITH FUTUREBUILDER
+    //LOADS TABBAR THEN NEWS
+    return FutureBuilder<List<Source>>(
+      future: futureSources,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
                   padding: EdgeInsets.all(10.r),
                   child: CircularProgressIndicator(
                     color: AppTheme.white,
                   ),
-                )
-              : DefaultTabController(
+                ),
+              ],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return ErrorWidget(snapshot.error.toString());
+        } else {
+          List<Source> sources = snapshot.data ?? [];
+          return SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                DefaultTabController(
                   length: sources.length,
                   child: TabBar(
                     padding: EdgeInsetsDirectional.only(
@@ -67,12 +71,12 @@ class _NewsViewState extends State<NewsView> {
                     onTap: (index) async {
                       if (currentIndex == index) return;
                       currentIndex = index;
-
-                      news.clear();
                       setState(() {});
-                      news = await NewsApi()
-                          .getNewsFromSource(sources[currentIndex].id);
-                      setState(() {});
+                      // news.clear();
+                      // setState(() {});
+                      // news = await NewsApi()
+                      //     .getNewsFromSource(sources[currentIndex].id);
+                      // setState(() {});
                     },
                     tabs: sources.map((source) {
                       return TabItem(
@@ -82,84 +86,94 @@ class _NewsViewState extends State<NewsView> {
                     }).toList(),
                   ),
                 ),
-          SizedBox(
-            height: 24.h,
-          ),
-          news.isEmpty
-              ? Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: AppTheme.white,
-                    ),
-                  ),
-                )
-              : Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: ListView.separated(
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: index == news.length - 1
-                              ? EdgeInsets.only(bottom: 16.h)
-                              : EdgeInsets.zero,
-                          child: NewsItem(
-                            myNews: news[index],
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 16.h,
-                        );
-                      },
-                      itemCount: news.length,
-                    ),
-                  ),
+                SizedBox(
+                  height: 24.h,
                 ),
-        ],
-      ),
+                FutureBuilder<List<MyNews>>(
+                  future: sources.isNotEmpty
+                      ? NewsApi().getNewsFromSource(sources[currentIndex].id)
+                      : null,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Padding(
+                        padding: EdgeInsets.all(10.r),
+                        child: CircularProgressIndicator(
+                          color: AppTheme.white,
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return ErrorWidget(snapshot.error.toString());
+                    } else {
+                      List<MyNews> news = snapshot.data ?? [];
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: index == news.length - 1
+                                    ? EdgeInsets.only(bottom: 16.h)
+                                    : EdgeInsets.zero,
+                                child: NewsItem(
+                                  myNews: news[index],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: 16.h,
+                              );
+                            },
+                            itemCount: news.length,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }
 
 
-//first Way Using FUTUREBUILDER 
-//   int currentIndex = 0;
-//   late Future<List<Source>> futureSources;
-//   @override
-//   void initState() {
-//     super.initState();
-//     futureSources = NewsApi().getCategorySources(widget.category);
-//   }
-// FutureBuilder<List<Source>>(s
-//       future: futureSources,
-//       builder: (context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return SizedBox(
-//             width: double.infinity,
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               children: [
-//                 Padding(
+//first Way WITHOUTUsing FUTUREBUILDER 
+//LOADS TABBAR(SOURCES) AND NEWS AT ONCE
+// List<Source> sources = [];
+// List<MyNews> news = [];
+// int currentIndex = 0;
+// @override
+// void initState() {
+//   super.initState();
+//   getSourcesandNews();
+// }
+// Future<void> getSourcesandNews() async {
+//   NewsApi newsApi = NewsApi();
+//   sources = await newsApi.getCategorySources(widget.category);
+//   news = await newsApi.getNewsFromSource(
+//     sources[currentIndex].id,
+//   );
+//   setState(() {});
+// }
+// SizedBox(
+//       width: double.infinity,
+//       height: double.infinity,
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.start,
+//         crossAxisAlignment: CrossAxisAlignment.center,
+//         children: [
+//           sources.isEmpty
+//               ? Padding(
 //                   padding: EdgeInsets.all(10.r),
 //                   child: CircularProgressIndicator(
 //                     color: AppTheme.white,
 //                   ),
-//                 ),
-//               ],
-//             ),
-//           );
-//         } else if (snapshot.hasError) {
-//           return ErrorWidget(snapshot.error.toString());
-//         } else {
-//           List<Source> sources = snapshot.data ?? [];
-//           return SizedBox(
-//             width: double.infinity,
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.start,
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               children: [
-//                 DefaultTabController(
+//                 )
+//               : DefaultTabController(
 //                   length: sources.length,
 //                   child: TabBar(
 //                     padding: EdgeInsetsDirectional.only(
@@ -173,12 +187,12 @@ class _NewsViewState extends State<NewsView> {
 //                     onTap: (index) async {
 //                       if (currentIndex == index) return;
 //                       currentIndex = index;
+
+//                       news.clear();
 //                       setState(() {});
-//                       // news.clear();
-//                       // setState(() {});
-//                       // news = await NewsApi()
-//                       //     .getNewsFromSource(sources[currentIndex].id);
-//                       // setState(() {});
+//                       news = await NewsApi()
+//                           .getNewsFromSource(sources[currentIndex].id);
+//                       setState(() {});
 //                     },
 //                     tabs: sources.map((source) {
 //                       return TabItem(
@@ -188,54 +202,40 @@ class _NewsViewState extends State<NewsView> {
 //                     }).toList(),
 //                   ),
 //                 ),
-//                 SizedBox(
-//                   height: 24.h,
-//                 ),
-//                 FutureBuilder<List<MyNews>>(
-//                   future: sources.isNotEmpty
-//                       ? NewsApi().getNewsFromSource(sources[currentIndex].id)
-//                       : null,
-//                   builder: (context, snapshot) {
-//                     if (snapshot.connectionState == ConnectionState.waiting) {
-//                       return Padding(
-//                         padding: EdgeInsets.all(10.r),
-//                         child: CircularProgressIndicator(
-//                           color: AppTheme.white,
-//                         ),
-//                       );
-//                     } else if (snapshot.hasError) {
-//                       return ErrorWidget(snapshot.error.toString());
-//                     } else {
-//                       List<MyNews> news = snapshot.data ?? [];
-//                       return Expanded(
-//                         child: Padding(
-//                           padding: EdgeInsets.symmetric(horizontal: 16.w),
-//                           child: ListView.separated(
-//                             itemBuilder: (context, index) {
-//                               return Padding(
-//                                 padding: index == news.length - 1
-//                                     ? EdgeInsets.only(bottom: 16.h)
-//                                     : EdgeInsets.zero,
-//                                 child: NewsItem(
-//                                   myNews: news[index],
-//                                 ),
-//                               );
-//                             },
-//                             separatorBuilder: (context, index) {
-//                               return SizedBox(
-//                                 height: 16.h,
-//                               );
-//                             },
-//                             itemCount: news.length,
+//           SizedBox(
+//             height: 24.h,
+//           ),
+//           news.isEmpty
+//               ? Expanded(
+//                   child: Center(
+//                     child: CircularProgressIndicator(
+//                       color: AppTheme.white,
+//                     ),
+//                   ),
+//                 )
+//               : Expanded(
+//                   child: Padding(
+//                     padding: EdgeInsets.symmetric(horizontal: 16.w),
+//                     child: ListView.separated(
+//                       itemBuilder: (context, index) {
+//                         return Padding(
+//                           padding: index == news.length - 1
+//                               ? EdgeInsets.only(bottom: 16.h)
+//                               : EdgeInsets.zero,
+//                           child: NewsItem(
+//                             myNews: news[index],
 //                           ),
-//                         ),
-//                       );
-//                     }
-//                   },
+//                         );
+//                       },
+//                       separatorBuilder: (context, index) {
+//                         return SizedBox(
+//                           height: 16.h,
+//                         );
+//                       },
+//                       itemCount: news.length,
+//                     ),
+//                   ),
 //                 ),
-//               ],
-//             ),
-//           );
-//         }
-//       },
+//         ],
+//       ),
 //     )
