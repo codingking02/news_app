@@ -46,6 +46,11 @@ class AppTheme {
         fontWeight: FontWeight.w700,
         color: white,
       ),
+      bodyLarge: GoogleFonts.inter(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: white,
+      ),
     ),
   );
   static ThemeData darkTheme = ThemeData();

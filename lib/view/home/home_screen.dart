@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:news_app/main.dart';
 import 'package:news_app/model/category.dart';
+import 'package:news_app/model/mynews.dart';
 import 'package:news_app/view/news/news_view.dart';
 import 'package:news_app/theme/apptheme.dart';
 import 'package:news_app/view/categories/categories_view.dart';
+import 'package:news_app/view/news/searchnews_view.dart';
 import 'package:news_app/widgets/drawer/home_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,10 +35,28 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(
           selectedCategory == null ? 'Home' : selectedCategory?.name ?? 'Home',
         ),
+        actions: [
+          Padding(
+            padding: EdgeInsetsDirectional.only(
+              end: 16.w,
+            ),
+            child: InkWell(
+              onTap: () {
+                if (selectedCategory == null) return;
+                Navigator.pushNamed(context, SearchNews.routeName);
+              },
+              child: SvgPicture.asset(
+                'assets/icons/search.svg',
+              ),
+            ),
+          ),
+        ],
       ),
       body: selectedCategory == null
           ? CategoriesView(onCategorySelected: onCategorySelected)
-          : NewsView(category: selectedCategory!),
+          : NewsView(
+              category: selectedCategory!,
+            ),
     );
   }
 

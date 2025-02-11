@@ -67,28 +67,53 @@ class HomeDrawer extends StatelessWidget {
                   ),
                 ],
               ),
-              DropdownButton(
-                value: 'Dark',
-                isExpanded: true,
-                dropdownColor: AppTheme.black,
-                menuWidth: 200.w,
-                items: [
-                  DropdownMenuItem(
+              SizedBox(
+                height: 8.h,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppTheme.white),
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    icon: SvgPicture.asset(
+                      'assets/icons/arrowdown.svg',
+                    ),
+                    padding: EdgeInsets.zero,
                     value: 'Dark',
-                    child: Text(
-                      'Dark',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
+                    isExpanded: true,
+                    dropdownColor: AppTheme.black,
+                    menuWidth: 200.w,
+                    items: [
+                      DropdownMenuItem(
+                        value: 'Dark',
+                        child: Text(
+                          'Dark',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Light',
+                        child: Text(
+                          'Light',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) {},
                   ),
-                  DropdownMenuItem(
-                    value: 'Light',
-                    child: Text(
-                      'Light',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ),
-                ],
-                onChanged: (value) {},
+                ),
+              ),
+              SizedBox(
+                height: 24.h,
+              ),
+              Divider(
+                color: AppTheme.white,
+              ),
+              SizedBox(
+                height: 8.h,
               ),
               Row(
                 spacing: 8.w,
@@ -101,6 +126,45 @@ class HomeDrawer extends StatelessWidget {
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 8.h,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppTheme.white),
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    icon: SvgPicture.asset(
+                      'assets/icons/arrowdown.svg',
+                    ),
+                    padding: EdgeInsets.zero,
+                    value: 'English',
+                    isExpanded: true,
+                    dropdownColor: AppTheme.black,
+                    menuWidth: 200.w,
+                    items: [
+                      DropdownMenuItem(
+                        value: 'English',
+                        child: Text(
+                          'English',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Arabic',
+                        child: Text(
+                          'Arabic',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) {},
+                  ),
+                ),
               ),
             ],
           ),

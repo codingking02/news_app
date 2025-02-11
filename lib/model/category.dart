@@ -10,9 +10,9 @@ class MyCategory {
       name: 'General',
     ),
     MyCategory(
-      id: 'Buisiness',
+      id: 'Business',
       imageName: 'buisiness_light',
-      name: 'Buisiness',
+      name: 'Business',
     ),
     MyCategory(
       id: 'Sports',

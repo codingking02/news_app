@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/api/news_api.dart';
@@ -6,8 +7,11 @@ import 'package:news_app/model/category.dart';
 import 'package:news_app/model/mynews.dart';
 import 'package:news_app/model/source.dart';
 import 'package:news_app/theme/apptheme.dart';
+import 'package:news_app/widgets/news/floatingbottomsheet.dart';
 import 'package:news_app/widgets/news/news_item.dart';
 import 'package:news_app/widgets/news/tab_item.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsView extends StatefulWidget {
   NewsView({required this.category, super.key});
@@ -49,12 +53,15 @@ class _NewsViewState extends State<NewsView> {
           );
         } else if (snapshot.hasError) {
           return ErrorWidget(snapshot.error.toString());
+        } else if (!snapshot.hasData) {
+          return Center(
+            child: Icon(Icons.error),
+          );
         } else {
           List<Source> sources = snapshot.data ?? [];
           return SizedBox(
             width: double.infinity,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 DefaultTabController(
@@ -89,24 +96,29 @@ class _NewsViewState extends State<NewsView> {
                 SizedBox(
                   height: 24.h,
                 ),
-                FutureBuilder<List<MyNews>>(
-                  future: sources.isNotEmpty
-                      ? NewsApi().getNewsFromSource(sources[currentIndex].id)
-                      : null,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Padding(
-                        padding: EdgeInsets.all(10.r),
-                        child: CircularProgressIndicator(
-                          color: AppTheme.white,
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return ErrorWidget(snapshot.error.toString());
-                    } else {
-                      List<MyNews> news = snapshot.data ?? [];
-                      return Expanded(
-                        child: Padding(
+                Expanded(
+                  child: FutureBuilder<List<MyNews>>(
+                    future: sources.isNotEmpty
+                        ? NewsApi().getNewsFromSource(
+                            sources[currentIndex].id,
+                            context,
+                          )
+                        : null,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: AppTheme.white,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return ErrorWidget(snapshot.error.toString());
+                      } else if (!snapshot.hasData) {
+                        return Icon(Icons.error);
+                      } else {
+                        List<MyNews> news = snapshot.data ?? [];
+
+                        return Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: ListView.separated(
                             itemBuilder: (context, index) {
@@ -114,8 +126,22 @@ class _NewsViewState extends State<NewsView> {
                                 padding: index == news.length - 1
                                     ? EdgeInsets.only(bottom: 16.h)
                                     : EdgeInsets.zero,
-                                child: NewsItem(
-                                  myNews: news[index],
+                                child: InkWell(
+                                  onTap: () async {
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      context: context,
+                                      builder: (context) {
+                                        return Floatingbottomsheet(
+                                          news: news[index],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: NewsItem(
+                                    myNews: news[index],
+                                  ),
                                 ),
                               );
                             },
@@ -126,10 +152,10 @@ class _NewsViewState extends State<NewsView> {
                             },
                             itemCount: news.length,
                           ),
-                        ),
-                      );
-                    }
-                  },
+                        );
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
@@ -140,8 +166,7 @@ class _NewsViewState extends State<NewsView> {
   }
 }
 
-
-//first Way WITHOUTUsing FUTUREBUILDER 
+//first Way WITHOUTUsing FUTUREBUILDER
 //LOADS TABBAR(SOURCES) AND NEWS AT ONCE
 // List<Source> sources = [];
 // List<MyNews> news = [];
