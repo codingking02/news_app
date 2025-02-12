@@ -3,11 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:news_app/main.dart';
 import 'package:news_app/model/category.dart';
-import 'package:news_app/model/mynews.dart';
-import 'package:news_app/view/news/news_view.dart';
-import 'package:news_app/theme/apptheme.dart';
+import 'package:news_app/news/view/news_view.dart';
+import 'package:news_app/settings/theme/apptheme.dart';
 import 'package:news_app/view/categories/categories_view.dart';
-import 'package:news_app/view/news/searchnews_view.dart';
+import 'package:news_app/news/view/searchnews_view.dart';
 import 'package:news_app/widgets/drawer/home_drawer.dart';
 
 class HomeScreen extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/provider/news_provider.dart';
-import 'package:news_app/widgets/news/floatingbottomsheet.dart';
-import 'package:news_app/widgets/news/news_item.dart';
-import 'package:news_app/widgets/news/searchtextfield.dart';
+import 'package:news_app/news/widgets/floatingbottomsheet.dart';
+import 'package:news_app/news/widgets/news_item.dart';
+import 'package:news_app/news/widgets/searchtextfield.dart';
 import 'package:provider/provider.dart';
 
 class SearchNews extends StatefulWidget {
@@ -34,7 +34,7 @@ class _SearchNewsState extends State<SearchNews> {
     newsProvider = Provider.of<NewsProvider>(context);
     if (!isAssigned) {
       searchList = List.generate(
-        newsProvider.mynews.length,
+        newsProvider.newsResponse.articles?.length ?? 0,
         (index) => index,
       );
       isAssigned = true;
@@ -63,9 +63,10 @@ class _SearchNewsState extends State<SearchNews> {
               child: ListView.separated(
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: index == newsProvider.mynews.length - 1
-                        ? EdgeInsets.only(bottom: 16.h)
-                        : EdgeInsets.zero,
+                    padding:
+                        index == newsProvider.newsResponse.articles!.length - 1
+                            ? EdgeInsets.only(bottom: 16.h)
+                            : EdgeInsets.zero,
                     child: InkWell(
                       onTap: () async {
                         showModalBottomSheet(
@@ -74,14 +75,16 @@ class _SearchNewsState extends State<SearchNews> {
                           context: context,
                           builder: (context) {
                             return Floatingbottomsheet(
-                              news: newsProvider.mynews[index],
+                              article:
+                                  newsProvider.newsResponse.articles![index],
                             );
                           },
                         );
                       },
                       child: searchList.contains(index)
                           ? NewsItem(
-                              myNews: newsProvider.mynews[index],
+                              article:
+                                  newsProvider.newsResponse.articles![index],
                             )
                           : SizedBox.shrink(),
                     ),
@@ -94,7 +97,7 @@ class _SearchNewsState extends State<SearchNews> {
                         )
                       : SizedBox.shrink();
                 },
-                itemCount: newsProvider.mynews.length,
+                itemCount: newsProvider.newsResponse.articles!.length,
               ),
             ),
           )
@@ -105,19 +108,21 @@ class _SearchNewsState extends State<SearchNews> {
 
   void onSearch(String query) {
     searchList.clear();
-    for (int i = 0; i < newsProvider.mynews.length; i++) {
-      if (newsProvider.mynews[i].author
+    for (int i = 0; i < newsProvider.newsResponse.articles!.length; i++) {
+      if ((newsProvider.newsResponse.articles![i].author ?? '')
               .toLowerCase()
               .contains(query.toLowerCase()) ||
-          newsProvider.mynews[i].content
+          (newsProvider.newsResponse.articles![i].content ?? '')
               .toLowerCase()
               .contains(query.toLowerCase()) ||
-          newsProvider.mynews[i].title
+          (newsProvider.newsResponse.articles![i].title ?? '')
               .toLowerCase()
               .contains(query.toLowerCase()) ||
-          newsProvider.mynews[i].description
+          (newsProvider.newsResponse.articles![i].description ?? '')
               .toLowerCase()
-              .contains(query.toLowerCase())) {
+              .contains(
+                query.toLowerCase(),
+              )) {
         searchList.add(i);
       }
     }

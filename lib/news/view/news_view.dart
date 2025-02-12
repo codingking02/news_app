@@ -1,17 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/api/news_api.dart';
-import 'package:news_app/main.dart';
 import 'package:news_app/model/category.dart';
-import 'package:news_app/model/mynews.dart';
-import 'package:news_app/model/source.dart';
-import 'package:news_app/theme/apptheme.dart';
-import 'package:news_app/widgets/news/floatingbottomsheet.dart';
-import 'package:news_app/widgets/news/news_item.dart';
-import 'package:news_app/widgets/news/tab_item.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:news_app/news/data/model/news_response/article.dart';
+import 'package:news_app/news/data/model/news_response/news_response.dart';
+import 'package:news_app/sources/data/model/source_response/source.dart';
+import 'package:news_app/sources/data/model/source_response/source_response.dart';
+import 'package:news_app/settings/theme/apptheme.dart';
+import 'package:news_app/news/widgets/floatingbottomsheet.dart';
+import 'package:news_app/news/widgets/news_item.dart';
+import 'package:news_app/sources/widgets/tab_item.dart';
 
 class NewsView extends StatefulWidget {
   NewsView({required this.category, super.key});
@@ -22,7 +20,7 @@ class NewsView extends StatefulWidget {
 
 class _NewsViewState extends State<NewsView> {
   int currentIndex = 0;
-  late Future<List<Source>> futureSources;
+  late Future<SourceResponse> futureSources;
   @override
   void initState() {
     super.initState();
@@ -33,7 +31,7 @@ class _NewsViewState extends State<NewsView> {
   Widget build(BuildContext context) {
     //SECOND WAY WITH FUTUREBUILDER
     //LOADS TABBAR THEN NEWS
-    return FutureBuilder<List<Source>>(
+    return FutureBuilder<SourceResponse>(
       future: futureSources,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -58,7 +56,7 @@ class _NewsViewState extends State<NewsView> {
             child: Icon(Icons.error),
           );
         } else {
-          List<Source> sources = snapshot.data ?? [];
+          List<Source> sources = snapshot.data!.sources ?? [];
           return SizedBox(
             width: double.infinity,
             child: Column(
@@ -97,10 +95,10 @@ class _NewsViewState extends State<NewsView> {
                   height: 24.h,
                 ),
                 Expanded(
-                  child: FutureBuilder<List<MyNews>>(
+                  child: FutureBuilder<NewsResponse>(
                     future: sources.isNotEmpty
                         ? NewsApi().getNewsFromSource(
-                            sources[currentIndex].id,
+                            sources[currentIndex].id ?? '',
                             context,
                           )
                         : null,
@@ -116,14 +114,14 @@ class _NewsViewState extends State<NewsView> {
                       } else if (!snapshot.hasData) {
                         return Icon(Icons.error);
                       } else {
-                        List<MyNews> news = snapshot.data ?? [];
+                        List<Article> articles = snapshot.data!.articles ?? [];
 
                         return Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: ListView.separated(
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: index == news.length - 1
+                                padding: index == articles.length - 1
                                     ? EdgeInsets.only(bottom: 16.h)
                                     : EdgeInsets.zero,
                                 child: InkWell(
@@ -134,13 +132,13 @@ class _NewsViewState extends State<NewsView> {
                                       context: context,
                                       builder: (context) {
                                         return Floatingbottomsheet(
-                                          news: news[index],
+                                          article: articles[index],
                                         );
                                       },
                                     );
                                   },
                                   child: NewsItem(
-                                    myNews: news[index],
+                                    article: articles[index],
                                   ),
                                 ),
                               );
@@ -150,7 +148,7 @@ class _NewsViewState extends State<NewsView> {
                                 height: 16.h,
                               );
                             },
-                            itemCount: news.length,
+                            itemCount: articles.length,
                           ),
                         );
                       }

@@ -1,18 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:news_app/model/mynews.dart';
-import 'package:news_app/theme/apptheme.dart';
+import 'package:news_app/news/data/model/news_response/article.dart';
+import 'package:news_app/settings/theme/apptheme.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class NewsItem extends StatelessWidget {
-  NewsItem({required this.myNews, super.key});
-  MyNews myNews;
+  NewsItem({required this.article, super.key});
+  Article article;
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    DateTime dateTime = DateTime.parse(myNews.publishedAt);
+
     return Container(
       padding: EdgeInsets.all(8.r),
       decoration: BoxDecoration(
@@ -24,7 +24,7 @@ class NewsItem extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(8.r),
             child: CachedNetworkImage(
-              imageUrl: myNews.urlToImage,
+              imageUrl: article.urlToImage ?? '',
               placeholder: (context, url) => Shimmer.fromColors(
                 baseColor: AppTheme.white,
                 highlightColor: AppTheme.white,
@@ -47,7 +47,7 @@ class NewsItem extends StatelessWidget {
             height: 10.h,
           ),
           Text(
-            myNews.content ?? '',
+            article.content ?? '',
             style: textTheme.titleMedium,
           ),
           SizedBox(
@@ -58,7 +58,7 @@ class NewsItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'By : ${myNews.author ?? ''}',
+                  'By : ${article.author ?? ''}',
                   style: textTheme.labelMedium,
                   maxLines: 2,
                   textAlign: TextAlign.start,
@@ -66,7 +66,8 @@ class NewsItem extends StatelessWidget {
                 ),
               ),
               Text(
-                timeago.format(dateTime, allowFromNow: true),
+                timeago.format(article.publishedAt ?? DateTime.now(),
+                    allowFromNow: true),
                 style: textTheme.labelMedium,
               ),
             ],

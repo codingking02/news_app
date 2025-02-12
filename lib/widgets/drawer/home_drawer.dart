@@ -2,7 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:news_app/theme/apptheme.dart';
+import 'package:news_app/settings/theme/apptheme.dart';
 
 class HomeDrawer extends StatelessWidget {
   HomeDrawer({required this.onTap, super.key});

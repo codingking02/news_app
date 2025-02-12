@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:news_app/model/mynews.dart';
-import 'package:news_app/theme/apptheme.dart';
+import 'package:news_app/news/data/model/news_response/article.dart';
+import 'package:news_app/settings/theme/apptheme.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Floatingbottomsheet extends StatelessWidget {
-  Floatingbottomsheet({required this.news, super.key});
-  MyNews news;
+  Floatingbottomsheet({required this.article, super.key});
+  Article article;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,7 +24,7 @@ class Floatingbottomsheet extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(8.r),
             child: CachedNetworkImage(
-              imageUrl: news.urlToImage,
+              imageUrl: article.urlToImage ?? '',
               placeholder: (context, url) => Shimmer.fromColors(
                 baseColor: AppTheme.black,
                 highlightColor: AppTheme.black,
@@ -49,7 +49,7 @@ class Floatingbottomsheet extends StatelessWidget {
             height: 10.h,
           ),
           Text(
-            news.content ?? '',
+            article.content ?? '',
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: AppTheme.black,
                 ),
@@ -62,7 +62,7 @@ class Floatingbottomsheet extends StatelessWidget {
             height: 56.h,
             child: ElevatedButton(
               onPressed: () async {
-                Uri url = Uri.parse(news.url);
+                Uri url = Uri.parse(article.url ?? '');
                 if (await canLaunchUrl(url)) {
                   await launchUrl(
                     url,
