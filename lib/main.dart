@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:news_app/provider/news_provider.dart';
-import 'package:news_app/provider/settings_provider.dart';
+import 'package:news_app/news/viewmodel/news_viewmodel.dart';
 import 'package:news_app/settings/theme/apptheme.dart';
 import 'package:news_app/view/home/home_screen.dart';
 import 'package:news_app/news/view/searchnews_view.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ChangeNotifierProvider(
-      create: (context) => NewsProvider(),
+      create: (context) => NewsViewmodel(),
       child: News(),
     ),
   );

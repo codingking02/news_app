@@ -37,7 +37,10 @@ class NewsItem extends StatelessWidget {
                   ),
                 ),
               ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              errorWidget: (context, url, error) => Icon(
+                Icons.error,
+                color: AppTheme.white,
+              ),
               fit: BoxFit.cover,
               height: 220.h,
               width: double.infinity,

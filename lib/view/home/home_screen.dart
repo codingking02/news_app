@@ -4,10 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:news_app/main.dart';
 import 'package:news_app/model/category.dart';
 import 'package:news_app/news/view/news_view.dart';
+import 'package:news_app/news/viewmodel/news_viewmodel.dart';
 import 'package:news_app/settings/theme/apptheme.dart';
 import 'package:news_app/view/categories/categories_view.dart';
 import 'package:news_app/news/view/searchnews_view.dart';
 import 'package:news_app/widgets/drawer/home_drawer.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -64,9 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  void resetSelectedCategory() {
+  void resetSelectedCategory(BuildContext context) {
     if (selectedCategory == null) return;
     selectedCategory = null;
+    Provider.of<NewsViewmodel>(context, listen: false).resetNews();
     setState(() {});
   }
 }

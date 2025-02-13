@@ -6,7 +6,7 @@ import 'package:news_app/settings/theme/apptheme.dart';
 
 class HomeDrawer extends StatelessWidget {
   HomeDrawer({required this.onTap, super.key});
-  VoidCallback onTap;
+  void Function(BuildContext) onTap;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,7 +33,7 @@ class HomeDrawer extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  onTap();
+                  onTap(context);
                   Navigator.of(context).pop();
                 },
                 child: Row(
