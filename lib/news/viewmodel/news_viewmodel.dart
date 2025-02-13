@@ -6,6 +6,7 @@ import 'package:news_app/news/data/model/news_response/news_response.dart';
 class NewsViewmodel with ChangeNotifier {
   NewsDataSource newsDataSource = NewsDataSource();
   List<Article> articles = [];
+  List<Article> allArticles = [];
   bool isLoading = false;
   bool hasMoreData = true;
   int page = 1;
@@ -33,6 +34,21 @@ class NewsViewmodel with ChangeNotifier {
       throw errorMessage ?? '';
     }
     isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> getAllNews(String sourceId) async {
+    try {
+      NewsResponse newsResponse = await newsDataSource.getAllNews(sourceId);
+      if (newsResponse.articles != null || newsResponse.status == 'ok') {
+        allArticles = newsResponse.articles ?? [];
+      } else {
+        throw 'Failed To Get Articles';
+      }
+    } catch (error) {
+      errorMessage = error.toString();
+      throw errorMessage ?? '';
+    }
     notifyListeners();
   }
 

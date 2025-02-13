@@ -38,10 +38,10 @@ class _SearchNewsState extends State<SearchNews> {
       ),
       body: Consumer<NewsViewmodel>(
         builder: (_, viewModel, __) {
-          news = viewModel.articles;
+          news = viewModel.allArticles;
           if (!isAssigned) {
             searchList = List.generate(
-              viewModel.articles.length,
+              viewModel.allArticles.length,
               (index) => index,
             );
             isAssigned = true;
@@ -65,7 +65,7 @@ class _SearchNewsState extends State<SearchNews> {
                   child: ListView.separated(
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: index == viewModel.articles.length - 1
+                        padding: index == viewModel.allArticles.length - 1
                             ? EdgeInsets.only(bottom: 16.h)
                             : EdgeInsets.zero,
                         child: InkWell(
@@ -76,14 +76,14 @@ class _SearchNewsState extends State<SearchNews> {
                               context: context,
                               builder: (context) {
                                 return Floatingbottomsheet(
-                                  article: viewModel.articles[index],
+                                  article: viewModel.allArticles[index],
                                 );
                               },
                             );
                           },
                           child: searchList.contains(index)
                               ? NewsItem(
-                                  article: viewModel.articles[index],
+                                  article: viewModel.allArticles[index],
                                 )
                               : SizedBox.shrink(),
                         ),
@@ -96,7 +96,7 @@ class _SearchNewsState extends State<SearchNews> {
                             )
                           : SizedBox.shrink();
                     },
-                    itemCount: viewModel.articles.length,
+                    itemCount: viewModel.allArticles.length,
                   ),
                 ),
               )

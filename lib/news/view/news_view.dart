@@ -79,6 +79,8 @@ class _NewsViewState extends State<NewsView> {
             );
           } else {
             List<Source> sources = viewModel.sources;
+            Provider.of<NewsViewmodel>(context, listen: false)
+                .getAllNews(sources[currentIndex].id!);
             if (!isAssigned) {
               Provider.of<NewsViewmodel>(context, listen: false).getNews(
                 sources[currentIndex].id ?? '',

@@ -29,4 +29,26 @@ class NewsDataSource {
       throw error.toString();
     }
   }
+
+  Future<NewsResponse> getAllNews(
+    String sourceId,
+  ) async {
+    try {
+      Uri uri =
+          Uri.https(ApiConstants.baseUrl, ApiConstants.topHeadlineEndPoint, {
+        'sources': sourceId,
+        'apiKey': ApiConstants.apiKey,
+      });
+      http.Response response = await http.get(uri);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responsebody = jsonDecode(response.body);
+
+        return NewsResponse.fromJson(responsebody);
+      } else {
+        return NewsResponse();
+      }
+    } catch (error) {
+      throw error.toString();
+    }
+  }
 }
