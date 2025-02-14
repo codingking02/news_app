@@ -5,6 +5,7 @@ import 'package:news_app/news/viewmodel/news_viewmodel.dart';
 import 'package:news_app/news/widgets/floatingbottomsheet.dart';
 import 'package:news_app/news/widgets/news_item.dart';
 import 'package:news_app/news/widgets/searchtextfield.dart';
+import 'package:news_app/provider/settings_provider.dart';
 import 'package:provider/provider.dart';
 
 class SearchNews extends StatefulWidget {
@@ -16,6 +17,7 @@ class SearchNews extends StatefulWidget {
 
 class _SearchNewsState extends State<SearchNews> {
   TextEditingController searchController = TextEditingController();
+  ScrollController scrollController = ScrollController();
   List<Article> news = [];
   List<int> searchList = [];
   bool isAssigned = false;
@@ -32,6 +34,7 @@ class _SearchNewsState extends State<SearchNews> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SettingsProvider>(context).isDark;
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
@@ -51,6 +54,13 @@ class _SearchNewsState extends State<SearchNews> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Searchtextfield(
+                  onTap: () {
+                    scrollController.animateTo(
+                      0.0, // Scroll to the top
+                      duration: Duration(milliseconds: 500), // Smooth animation
+                      curve: Curves.easeInOut,
+                    );
+                  },
                   onChanged: (query) {
                     onSearch(query);
                   },
@@ -63,6 +73,7 @@ class _SearchNewsState extends State<SearchNews> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: ListView.separated(
+                    controller: scrollController,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: index == viewModel.allArticles.length - 1

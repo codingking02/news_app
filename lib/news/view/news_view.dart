@@ -29,7 +29,6 @@ class _NewsViewState extends State<NewsView> {
   void initState() {
     super.initState();
     sourceViewmodel.getSources(widget.category);
-
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         scrollController.addListener(
