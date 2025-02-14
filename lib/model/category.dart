@@ -6,37 +6,37 @@ class MyCategory {
   static List<MyCategory> myCategories = [
     MyCategory(
       id: 'General',
-      imageName: 'general_light',
+      imageName: 'general',
       name: 'General',
     ),
     MyCategory(
       id: 'Business',
-      imageName: 'buisiness_light',
+      imageName: 'buisiness',
       name: 'Business',
     ),
     MyCategory(
       id: 'Sports',
-      imageName: 'sports_light',
+      imageName: 'sports',
       name: 'Sports',
     ),
     MyCategory(
       id: 'Entertainment',
-      imageName: 'entertainment_light',
+      imageName: 'entertainment',
       name: 'Entertainment',
     ),
     MyCategory(
       id: 'Health',
-      imageName: 'health_light',
+      imageName: 'health',
       name: 'Health',
     ),
     MyCategory(
       id: 'Science',
-      imageName: 'science_light',
+      imageName: 'science',
       name: 'Science',
     ),
     MyCategory(
       id: 'Technology',
-      imageName: 'technology_light',
+      imageName: 'technology',
       name: 'Technology',
     ),
   ];

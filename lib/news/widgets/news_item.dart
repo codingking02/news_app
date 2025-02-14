@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/news/data/model/news_response/article.dart';
+import 'package:news_app/provider/settings_provider.dart';
 import 'package:news_app/settings/theme/apptheme.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -11,12 +13,13 @@ class NewsItem extends StatelessWidget {
   Article article;
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SettingsProvider>(context).isDark;
     TextTheme textTheme = Theme.of(context).textTheme;
 
     return Container(
       padding: EdgeInsets.all(8.r),
       decoration: BoxDecoration(
-        border: Border.all(color: AppTheme.white),
+        border: Border.all(color: isDark ? AppTheme.white : AppTheme.black),
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -26,8 +29,8 @@ class NewsItem extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: article.urlToImage ?? '',
               placeholder: (context, url) => Shimmer.fromColors(
-                baseColor: AppTheme.white,
-                highlightColor: AppTheme.white,
+                baseColor: isDark ? AppTheme.white : AppTheme.black,
+                highlightColor: isDark ? AppTheme.white : AppTheme.black,
                 child: Container(
                   height: 220.h,
                   width: double.infinity,
@@ -39,7 +42,7 @@ class NewsItem extends StatelessWidget {
               ),
               errorWidget: (context, url, error) => Icon(
                 Icons.error,
-                color: AppTheme.white,
+                color: isDark ? AppTheme.white : AppTheme.black,
               ),
               fit: BoxFit.cover,
               height: 220.h,

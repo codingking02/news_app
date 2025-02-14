@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/model/category.dart';
 import 'package:news_app/news/data/model/news_response/article.dart';
 import 'package:news_app/news/viewmodel/news_viewmodel.dart';
+import 'package:news_app/provider/settings_provider.dart';
 import 'package:news_app/sources/data/model/source_response/source.dart';
 import 'package:news_app/settings/theme/apptheme.dart';
 import 'package:news_app/news/widgets/floatingbottomsheet.dart';
@@ -52,6 +53,7 @@ class _NewsViewState extends State<NewsView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SettingsProvider>(context).isDark;
     return ChangeNotifierProvider(
       create: (context) => sourceViewmodel,
       child: Consumer<SourceViewmodel>(
@@ -65,7 +67,7 @@ class _NewsViewState extends State<NewsView> {
                   Padding(
                     padding: EdgeInsets.all(10.r),
                     child: CircularProgressIndicator(
-                      color: AppTheme.white,
+                      color: isDark ? AppTheme.white : AppTheme.black,
                     ),
                   ),
                 ],
@@ -119,7 +121,7 @@ class _NewsViewState extends State<NewsView> {
                             child: Padding(
                               padding: EdgeInsets.all(16.r),
                               child: CircularProgressIndicator(
-                                color: AppTheme.white,
+                                color: isDark ? AppTheme.white : AppTheme.black,
                               ),
                             ),
                           );
@@ -128,7 +130,7 @@ class _NewsViewState extends State<NewsView> {
                         } else if (viewModel.articles.isEmpty) {
                           return Icon(
                             Icons.error,
-                            color: AppTheme.white,
+                            color: isDark ? AppTheme.white : AppTheme.black,
                           );
                         } else {
                           List<Article> articles = viewModel.articles;
@@ -145,7 +147,9 @@ class _NewsViewState extends State<NewsView> {
                                             child: Padding(
                                               padding: EdgeInsets.all(16.r),
                                               child: CircularProgressIndicator(
-                                                color: AppTheme.white,
+                                                color: isDark
+                                                    ? AppTheme.white
+                                                    : AppTheme.black,
                                               ),
                                             ),
                                           )

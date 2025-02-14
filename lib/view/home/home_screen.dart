@@ -5,6 +5,7 @@ import 'package:news_app/main.dart';
 import 'package:news_app/model/category.dart';
 import 'package:news_app/news/view/news_view.dart';
 import 'package:news_app/news/viewmodel/news_viewmodel.dart';
+import 'package:news_app/provider/settings_provider.dart';
 import 'package:news_app/settings/theme/apptheme.dart';
 import 'package:news_app/view/categories/categories_view.dart';
 import 'package:news_app/news/view/searchnews_view.dart';
@@ -23,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   MyCategory? selectedCategory;
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SettingsProvider>(context).isDark;
     return Scaffold(
       drawer: Drawer(
         shape: BeveledRectangleBorder(),
@@ -47,7 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pushNamed(context, SearchNews.routeName);
               },
               child: SvgPicture.asset(
-                'assets/icons/search.svg',
+                isDark
+                    ? 'assets/icons/search.svg'
+                    : 'assets/icons/search_dark.svg',
               ),
             ),
           ),

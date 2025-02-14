@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/news/data/model/news_response/article.dart';
+import 'package:news_app/provider/settings_provider.dart';
 import 'package:news_app/settings/theme/apptheme.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,11 +13,12 @@ class Floatingbottomsheet extends StatelessWidget {
   Article article;
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SettingsProvider>(context).isDark;
     return Container(
       padding: EdgeInsets.all(8.r),
       margin: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppTheme.white,
+        color: isDark ? AppTheme.white : AppTheme.black,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -26,8 +29,8 @@ class Floatingbottomsheet extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: article.urlToImage ?? '',
               placeholder: (context, url) => Shimmer.fromColors(
-                baseColor: AppTheme.black,
-                highlightColor: AppTheme.black,
+                baseColor: isDark ? AppTheme.white : AppTheme.black,
+                highlightColor: isDark ? AppTheme.white : AppTheme.black,
                 child: Container(
                   height: 220.h,
                   width: double.infinity,
@@ -51,7 +54,7 @@ class Floatingbottomsheet extends StatelessWidget {
           Text(
             article.content ?? '',
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: AppTheme.black,
+                  color: isDark ? AppTheme.black : AppTheme.white,
                 ),
           ),
           SizedBox(
@@ -71,7 +74,7 @@ class Floatingbottomsheet extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.black,
+                backgroundColor: isDark ? AppTheme.black : AppTheme.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(
                     16.r,

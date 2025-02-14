@@ -1,14 +1,18 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:news_app/provider/settings_provider.dart';
 import 'package:news_app/settings/theme/apptheme.dart';
+import 'package:provider/provider.dart';
 
 class HomeDrawer extends StatelessWidget {
   HomeDrawer({required this.onTap, super.key});
   void Function(BuildContext) onTap;
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<SettingsProvider>(context).isDark;
     return Column(
       children: [
         Container(
@@ -44,7 +48,9 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     Text(
                       'Go To Home',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: AppTheme.white,
+                          ),
                     ),
                   ],
                 ),
@@ -63,7 +69,9 @@ class HomeDrawer extends StatelessWidget {
                   ),
                   Text(
                     'Theme',
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          color: AppTheme.white,
+                        ),
                   ),
                 ],
               ),
@@ -82,27 +90,40 @@ class HomeDrawer extends StatelessWidget {
                       'assets/icons/arrowdown.svg',
                     ),
                     padding: EdgeInsets.zero,
-                    value: 'Dark',
+                    value: Provider.of<SettingsProvider>(context, listen: false)
+                        .themeMode,
                     isExpanded: true,
                     dropdownColor: AppTheme.black,
                     menuWidth: 200.w,
                     items: [
                       DropdownMenuItem(
-                        value: 'Dark',
+                        value: ThemeMode.dark,
                         child: Text(
                           'Dark',
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style:
+                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: AppTheme.white,
+                                  ),
                         ),
                       ),
                       DropdownMenuItem(
-                        value: 'Light',
+                        value: ThemeMode.light,
                         child: Text(
                           'Light',
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style:
+                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: AppTheme.white,
+                                  ),
                         ),
                       ),
                     ],
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      Provider.of<SettingsProvider>(context, listen: false)
+                          .setTheme(
+                        value!,
+                      );
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ),
               ),
@@ -123,7 +144,9 @@ class HomeDrawer extends StatelessWidget {
                   ),
                   Text(
                     'Language',
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          color: AppTheme.white,
+                        ),
                   ),
                 ],
               ),
@@ -151,14 +174,20 @@ class HomeDrawer extends StatelessWidget {
                         value: 'English',
                         child: Text(
                           'English',
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style:
+                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: AppTheme.white,
+                                  ),
                         ),
                       ),
                       DropdownMenuItem(
                         value: 'Arabic',
                         child: Text(
                           'Arabic',
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style:
+                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: AppTheme.white,
+                                  ),
                         ),
                       ),
                     ],
