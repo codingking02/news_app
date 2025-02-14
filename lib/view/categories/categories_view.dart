@@ -34,6 +34,7 @@ class CategoriesView extends StatelessWidget {
                     },
                     child: CategoryItem(
                       myCategory: MyCategory.myCategories[index],
+                      currentIndex: index,
                     ),
                   ),
                 );
