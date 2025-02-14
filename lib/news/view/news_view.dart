@@ -7,6 +7,7 @@ import 'package:news_app/sources/data/model/source_response/source.dart';
 import 'package:news_app/settings/theme/apptheme.dart';
 import 'package:news_app/news/widgets/floatingbottomsheet.dart';
 import 'package:news_app/news/widgets/news_item.dart';
+import 'package:news_app/sources/view/sources_tabbar.dart';
 import 'package:news_app/sources/viewmodel/source_viewmodel.dart';
 import 'package:news_app/sources/widgets/tab_item.dart';
 import 'package:provider/provider.dart';
@@ -92,36 +93,21 @@ class _NewsViewState extends State<NewsView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  DefaultTabController(
-                    length: sources.length,
-                    child: TabBar(
-                      padding: EdgeInsetsDirectional.only(
-                        start: 16.w,
-                      ),
-                      tabAlignment: TabAlignment.start,
-                      isScrollable: true,
-                      indicatorColor: AppTheme.white,
-                      labelPadding: EdgeInsetsDirectional.only(end: 16.w),
-                      dividerColor: Colors.transparent,
-                      onTap: (index) async {
-                        if (currentIndex == index) return;
-                        currentIndex = index;
-                        Provider.of<NewsViewmodel>(context, listen: false)
-                            .resetNews();
-                        Provider.of<NewsViewmodel>(context, listen: false)
-                            .getNews(
-                          sources[currentIndex].id ?? '',
-                        );
+                  DefaultTabBar(
+                    onTap: (index) {
+                      if (currentIndex == index) return;
+                      currentIndex = index;
+                      Provider.of<NewsViewmodel>(context, listen: false)
+                          .resetNews();
+                      Provider.of<NewsViewmodel>(context, listen: false)
+                          .getNews(
+                        sources[currentIndex].id ?? '',
+                      );
 
-                        setState(() {});
-                      },
-                      tabs: sources.map((source) {
-                        return TabItem(
-                          source: source,
-                          isSelected: currentIndex == sources.indexOf(source),
-                        );
-                      }).toList(),
-                    ),
+                      setState(() {});
+                    },
+                    currentIndex: currentIndex,
+                    sources: sources,
                   ),
                   SizedBox(
                     height: 24.h,
