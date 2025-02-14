@@ -33,8 +33,8 @@ class _NewsViewState extends State<NewsView> {
       (_) {
         scrollController.addListener(
           () {
-            if (scrollController.position.pixels ==
-                scrollController.position.maxScrollExtent) {
+            if (scrollController.position.pixels >=
+                scrollController.position.maxScrollExtent - 200) {
               Provider.of<NewsViewmodel>(context, listen: false)
                   .getNews(sourceViewmodel.sources[currentIndex].id!);
             }
@@ -46,7 +46,6 @@ class _NewsViewState extends State<NewsView> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     scrollController.dispose();
   }
