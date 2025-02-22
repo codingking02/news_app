@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/news/data/data_source/news_data_source.dart';
+import 'package:news_app/news/data/data_source/news_api_data_source.dart';
 import 'package:news_app/news/data/model/news_response/article.dart';
 import 'package:news_app/news/data/model/news_response/news_response.dart';
+import 'package:news_app/news/repositories/news_repository.dart';
 
 class NewsViewmodel with ChangeNotifier {
-  NewsDataSource newsDataSource = NewsDataSource();
+  NewsRepository newsRepository = NewsRepository(NewsApiDataSource());
   List<Article> articles = [];
   List<Article> allArticles = [];
   bool isLoading = false;
@@ -18,16 +19,12 @@ class NewsViewmodel with ChangeNotifier {
     if (isLoading || !hasMoreData) return;
     isLoading = true;
     try {
-      NewsResponse newsResponse =
-          await newsDataSource.getNewsFromSource(sourceId, page, pageSize);
-      if (newsResponse.articles != null || newsResponse.status == 'ok') {
-        articles.addAll(newsResponse.articles ?? []);
-        page++;
-        if (pageSize > newsResponse.articles!.length) {
-          hasMoreData = false;
-        }
-      } else {
-        throw 'Failed To Get Articles';
+      List<Article> myArticles =
+          await newsRepository.getNews(sourceId, page, pageSize);
+      articles.addAll(myArticles);
+      page++;
+      if (pageSize > myArticles.length) {
+        hasMoreData = false;
       }
     } catch (error) {
       errorMessage = error.toString();
@@ -39,12 +36,9 @@ class NewsViewmodel with ChangeNotifier {
 
   Future<void> getAllNews(String sourceId) async {
     try {
-      NewsResponse newsResponse = await newsDataSource.getAllNews(sourceId);
-      if (newsResponse.articles != null || newsResponse.status == 'ok') {
-        allArticles = newsResponse.articles ?? [];
-      } else {
-        throw 'Failed To Get Articles';
-      }
+      allArticles = await newsRepository.getAllNews(
+        sourceId,
+      );
     } catch (error) {
       errorMessage = error.toString();
       throw errorMessage ?? '';
