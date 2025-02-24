@@ -11,6 +11,7 @@ import 'package:news_app/news/widgets/floatingbottomsheet.dart';
 import 'package:news_app/news/widgets/news_item.dart';
 import 'package:news_app/sources/view/sources_tabbar.dart';
 import 'package:news_app/sources/viewmodel/source_viewmodel.dart';
+import 'package:news_app/sources/viewmodel/sources_states.dart';
 import 'package:news_app/sources/widgets/tab_item.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -28,6 +29,7 @@ class _NewsViewState extends State<NewsView> {
   SourceViewmodel sourceViewmodel = SourceViewmodel();
   ScrollController scrollController = ScrollController();
   bool isAssigned = false;
+  List<Source> sources = [];
   @override
   void initState() {
     super.initState();
@@ -39,7 +41,7 @@ class _NewsViewState extends State<NewsView> {
             if (scrollController.position.pixels >=
                 scrollController.position.maxScrollExtent - 200) {
               Provider.of<NewsViewmodel>(context, listen: false)
-                  .getNews(sourceViewmodel.sources[currentIndex].id!);
+                  .getNews(sources[currentIndex].id!);
             }
           },
         );
@@ -56,11 +58,11 @@ class _NewsViewState extends State<NewsView> {
   @override
   Widget build(BuildContext context) {
     bool isDark = Provider.of<SettingsProvider>(context).isDark;
-    return ChangeNotifierProvider(
+    return BlocProvider(
       create: (context) => sourceViewmodel,
-      child: Consumer<SourceViewmodel>(
-        builder: (_, viewModel, __) {
-          if (viewModel.isLoading) {
+      child: BlocBuilder<SourceViewmodel, SourcesStates>(
+        builder: (context, state) {
+          if (state is GetSourcesLoading) {
             return SizedBox(
               width: double.infinity,
               child: Column(
@@ -75,14 +77,10 @@ class _NewsViewState extends State<NewsView> {
                 ],
               ),
             );
-          } else if (viewModel.errorMessage != null) {
-            return ErrorWidget(viewModel.errorMessage ?? '');
-          } else if (viewModel.sources.isEmpty) {
-            return Center(
-              child: Icon(Icons.error),
-            );
-          } else {
-            List<Source> sources = viewModel.sources;
+          } else if (state is GetSourcesError) {
+            return ErrorWidget(state.errorMessage);
+          } else if (state is GetSourcesSuccess) {
+            sources = state.sources;
             Provider.of<NewsViewmodel>(context, listen: false)
                 .getAllNews(sources[currentIndex].id!);
             if (!isAssigned) {
@@ -233,6 +231,8 @@ class _NewsViewState extends State<NewsView> {
                 ],
               ),
             );
+          } else {
+            return const SizedBox.shrink();
           }
         },
       ),
