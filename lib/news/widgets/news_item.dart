@@ -28,18 +28,33 @@ class NewsItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.r),
             child: CachedNetworkImage(
               imageUrl: article.urlToImage ?? '',
-              placeholder: (context, url) => Shimmer.fromColors(
-                baseColor: isDark ? AppTheme.white : AppTheme.black,
-                highlightColor: isDark ? AppTheme.white : AppTheme.black,
-                child: Container(
-                  height: 220.h,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppTheme.grey,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                ),
-              ),
+              placeholder: (context, url) => isDark
+                  ? Shimmer.fromColors(
+                      baseColor: Colors.grey.shade800, // Darker grey for base
+                      highlightColor:
+                          Colors.grey.shade500, // Lighter grey for highlight
+                      child: Container(
+                        width: double.infinity,
+                        height: 350.h,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade900,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    )
+                  : Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300, // Light grey for base
+                      highlightColor:
+                          Colors.grey.shade100, // Brighter white for highlight
+                      child: Container(
+                        width: double.infinity,
+                        height: 350.h,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
               errorWidget: (context, url, error) => Icon(
                 Icons.error,
                 color: isDark ? AppTheme.white : AppTheme.black,

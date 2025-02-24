@@ -54,6 +54,11 @@ class _SearchNewsState extends State<SearchNews> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Searchtextfield(
+                  textEditingController: searchController,
+                  onClear: () {
+                    searchController.clear();
+                    onSearch('');
+                  },
                   onTap: () {
                     scrollController.animateTo(
                       0.0, // Scroll to the top

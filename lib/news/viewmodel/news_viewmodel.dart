@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/news/data/data_source/news_api_data_source.dart';
+import 'package:news_app/news/data/data_source/news_data_source.dart';
 import 'package:news_app/news/data/model/news_response/article.dart';
-import 'package:news_app/news/data/model/news_response/news_response.dart';
 import 'package:news_app/news/repositories/news_repository.dart';
+import 'package:news_app/service/service_locator.dart';
+import 'package:news_app/service_loactor.dart';
 
 class NewsViewmodel with ChangeNotifier {
-  NewsRepository newsRepository = NewsRepository(NewsApiDataSource());
+  NewsRepository newsRepository = NewsRepository(getIt<NewsDataSource>());
   List<Article> articles = [];
   List<Article> allArticles = [];
   bool isLoading = false;

@@ -13,6 +13,8 @@ import 'package:news_app/sources/view/sources_tabbar.dart';
 import 'package:news_app/sources/viewmodel/source_viewmodel.dart';
 import 'package:news_app/sources/widgets/tab_item.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class NewsView extends StatefulWidget {
   NewsView({required this.category, super.key});
@@ -117,12 +119,48 @@ class _NewsViewState extends State<NewsView> {
                     child: Consumer<NewsViewmodel>(
                       builder: (_, viewModel, __) {
                         if (viewModel.isLoading) {
-                          return Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(16.r),
-                              child: CircularProgressIndicator(
-                                color: isDark ? AppTheme.white : AppTheme.black,
-                              ),
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: ListView.separated(
+                              itemBuilder: (context, index) {
+                                return isDark
+                                    ? Shimmer.fromColors(
+                                        baseColor: Colors.grey
+                                            .shade800, // Darker grey for base
+                                        highlightColor: Colors.grey
+                                            .shade500, // Lighter grey for highlight
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 350.h,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade900,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                      )
+                                    : Shimmer.fromColors(
+                                        baseColor: Colors.grey
+                                            .shade300, // Light grey for base
+                                        highlightColor: Colors.grey
+                                            .shade100, // Brighter white for highlight
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 350.h,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade200,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                      );
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  height: 16.h,
+                                );
+                              },
+                              itemCount: 2,
                             ),
                           );
                         } else if (viewModel.errorMessage != null) {

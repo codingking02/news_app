@@ -7,14 +7,16 @@ import 'package:provider/provider.dart';
 
 class Searchtextfield extends StatefulWidget {
   const Searchtextfield({
-    this.textEditingController,
+    required this.textEditingController,
     required this.onChanged,
     required this.onTap,
+    required this.onClear,
     super.key,
   });
   final TextEditingController? textEditingController;
   final void Function(String)? onChanged;
   final void Function()? onTap;
+  final VoidCallback onClear;
 
   @override
   State<Searchtextfield> createState() => _SearchtextfieldState();
@@ -38,6 +40,13 @@ class _SearchtextfieldState extends State<Searchtextfield> {
         prefixIcon: SvgPicture.asset(
           isDark ? 'assets/icons/search.svg' : 'assets/icons/search_dark.svg',
           fit: BoxFit.scaleDown,
+        ),
+        suffixIcon: InkWell(
+          onTap: widget.onClear,
+          child: SvgPicture.asset(
+            isDark ? 'assets/icons/close.svg' : 'assets/icons/close_light.svg',
+            fit: BoxFit.scaleDown,
+          ),
         ),
         hintText: 'Search',
         hintStyle: Theme.of(context).textTheme.bodyLarge,
