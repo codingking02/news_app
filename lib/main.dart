@@ -19,7 +19,7 @@ void main() {
           create: (context) => NewsViewmodel(),
         ),
         ChangeNotifierProvider(
-          create: (context) => SettingsProvider(),
+          create: (context) => SettingsProvider()..loadTheme(),
         ),
       ],
       child: News(),
