@@ -17,10 +17,7 @@ Designed with **light/dark themes** and seamless article redirection.
 - MVVM Architecture
 - NewsAPI
 - SharedPreferences
-
-## 📸 Screenshots
-(Add screenshots here)
-
+- 
 ## ⚙️ Installation
 ```bash
 git clone https://github.com/codingking02/news_app.git
