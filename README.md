@@ -1,16 +1,29 @@
-# news_app
+# 📰 News App
 
-A new Flutter project.
+A **Flutter news application** with categorized sections, real-time API updates, and MVVM architecture.  
+Designed with **light/dark themes** and seamless article redirection.
 
-## Getting Started
+## 🚀 Features
+- 📰 Fetch news from NewsAPI in real-time
+- 📂 Categorized news sections (Business, Sports, Technology, etc.)
+- 🌓 Light & Dark theme support
+- 🌍 Multi-language readiness
+- 🔗 Open full articles via URL Launcher
+- 📲 Persistent user settings with SharedPreferences
 
-This project is a starting point for a Flutter application.
+## 🛠️ Tech Stack
+- Flutter, Dart
+- Provider & Cubit (State Management)
+- MVVM Architecture
+- NewsAPI
+- SharedPreferences
 
-A few resources to get you started if this is your first Flutter project:
+## 📸 Screenshots
+(Add screenshots here)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## ⚙️ Installation
+```bash
+git clone https://github.com/codingking02/news_app.git
+cd news_app
+flutter pub get
+flutter run
